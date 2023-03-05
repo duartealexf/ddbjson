@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:integration": "node tests/integration/index.test.js"
   },
   "dependencies": {
     "@aws-sdk/util-dynamodb": "^3.281.0",
