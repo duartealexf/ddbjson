@@ -2,7 +2,7 @@
   "name": "ddbjson",
   "version": "1.0.0",
   "description": "Convert DynamoDB JSON to JSON",
-  "bin": "./src/index.js",
+  "bin": "./lib/index.js",
   "author": "duartealexf@gmail.com",
   "license": "MIT",
   "scripts": {

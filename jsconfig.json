@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules"],
-  "include": ["src", "tests"],
+  "include": ["src", "tests", "lib/index.js"],
   "compilerOptions": {
     "checkJs": true,
     "target": "ES6",
