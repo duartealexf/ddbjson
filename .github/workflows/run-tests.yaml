@@ -13,7 +13,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version: 19
+          node-version: 16
 
       - name: Run tests
         run: |
@@ -43,7 +43,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Build and run tests
+      - name: Run tests
         run: |
           npm i --production
           npm run test:integration
