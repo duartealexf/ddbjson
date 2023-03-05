@@ -1,0 +1,13 @@
+{
+  "object": {
+    "array": ["a", "b", "c"],
+    "subobject": {
+      "key1": "value1",
+      "key2": "value2"
+    }
+  },
+  "number": 1,
+  "string": "string",
+  "boolean": true,
+  "null": null
+}

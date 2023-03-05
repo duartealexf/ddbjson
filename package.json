@@ -1,0 +1,22 @@
+{
+  "name": "ddbjson",
+  "version": "1.0.0",
+  "description": "Convert DynamoDB JSON to JSON",
+  "bin": "./src/index.js",
+  "author": "duartealexf@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@aws-sdk/util-dynamodb": "^3.281.0",
+    "lodash.get": "^4.4.2",
+    "yargs": "^17.7.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.4.0",
+    "@types/node": "^18.14.2",
+    "jest": "^29.4.3"
+  }
+}

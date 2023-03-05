@@ -1,0 +1,11 @@
+{
+  "exclude": ["node_modules"],
+  "include": ["src", "tests"],
+  "compilerOptions": {
+    "checkJs": true,
+    "target": "ES6",
+    "moduleResolution": "Node",
+    "types": ["node", "jest"],
+    "resolveJsonModule": true
+  }
+}
