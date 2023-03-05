@@ -1,6 +1,10 @@
 {
   "object": {
-    "array": ["a", "b", "c"],
+    "array": [
+      "a",
+      "b",
+      "c"
+    ],
     "subobject": {
       "key1": "value1",
       "key2": "value2"

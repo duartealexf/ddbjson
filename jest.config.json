@@ -2,6 +2,7 @@
   "rootDir": "./",
   "testPathIgnorePatterns": ["<rootDir>/node_modules"],
   "collectCoverageFrom": ["<rootDir>/src/**/*.js"],
+  "testMatch": ["<rootDir>/tests/unit/*.test.js"],
   "collectCoverage": true,
   "clearMocks": true,
   "coverageDirectory": "coverage",

@@ -21,9 +21,7 @@ const assertCommand = async ({ command, stdin, arg, get }, expected, description
       ? await run('echo', `'${stdin}'`, '|', 'ddbjson', command, '-', '-g', `'${get}'`)
       : await run('echo', `'${stdin}'`, '|', 'ddbjson', command, '-'));
   } else {
-    ({ stdout } = get
-      ? await run('ddbjson', command, `'${arg}'`, '-g', `'${get}'`)
-      : await run('ddbjson', command, `'${arg}'`));
+    ({ stdout } = get ? await run('ddbjson', command, `'${arg}'`, '-g', `'${get}'`) : await run('ddbjson', command, `'${arg}'`));
   }
 
   stdout = stdout.trim();

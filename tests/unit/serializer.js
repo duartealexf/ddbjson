@@ -25,7 +25,7 @@ module.exports = class OutputSerializer {
   }
 
   toString() {
-    return this.contents.join("");
+    return this.contents.join('');
   }
 
   /**
