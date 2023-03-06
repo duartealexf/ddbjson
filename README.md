@@ -1,4 +1,4 @@
-# 💫 Convert JSON from / to DynamoDB JSON format on terminal! 🙌
+# 💫 Convert JSON from / to DynamoDB JSON on CLI! 🙌
 
 Use `ddbjson` to convert from DynamoDB JSON format to regular JSON and vice versa on any terminal:
 
@@ -93,8 +93,8 @@ $ ddbjson u '{"fruits":{"L":[{"S":"apple"},{"S":"kiwi"}]}}'
 ### 🔸 Unmarshall from stdin
 
 - Pipe in JSON from other commands.
-- Pipe in from AWS CLI DynamoDB commands (use `-g` argument – [understand why](#⚠️-when-reading-from-aws-cli-dynamodb-commands))
-- See more [usage ideas below](#💡-more-usage-ideas)!
+- Pipe in from AWS CLI DynamoDB commands (use `-g` argument – [understand why](#-when-reading-from-aws-cli-dynamodb-commands))
+- See more [usage ideas below](#-more-usage-ideas)!
 
 ```sh
 $ aws dynamodb get-item --table-name food --key '{"type":{"S":"fruit"}}' | ddbjson u -g "Item" -
@@ -138,7 +138,7 @@ $ ddbjson m '{"fruits":["apple","kiwi"]}'
 ### 🔹 Marshall from stdin
 
 - Pipe in JSON from other commands.
-- See more [usage ideas below](#💡-more-usage-ideas)!
+- See more [usage ideas below](#-more-usage-ideas)!
 
 ```sh
 $ curl https://food.com/api | ddbjson m -
@@ -150,7 +150,7 @@ $ curl https://food.com/api | ddbjson m -
 
 ## 🍰 Parse only a subset of JSON using `-g`
 
-- Useful when reading from AWS CLI DynamoDB commands ([read more](#⚠️-when-reading-from-aws-cli-dynamodb-commands)).
+- Useful when reading from AWS CLI DynamoDB commands ([read more](#-when-reading-from-aws-cli-dynamodb-commands)).
 - Pass in the full path to the JSON property.
 - The given property must be an object or array.
 
