@@ -20,6 +20,9 @@ jobs:
           npm i
           npm run test
 
+      - name: Report coverage
+        uses: coverallsapp/github-action@v2
+
   integration-tests:
     name: Run integration tests
     runs-on: ubuntu-latest
