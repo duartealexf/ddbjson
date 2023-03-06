@@ -1,7 +1,7 @@
 {
   "name": "ddbjson",
   "version": "1.0.0",
-  "description": "Convert DynamoDB JSON to JSON",
+  "description": "Convert JSON from / to DynamoDB JSON format on terminal!",
   "bin": "./lib/index.js",
   "author": "duartealexf@gmail.com",
   "license": "MIT",
