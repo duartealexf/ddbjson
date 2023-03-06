@@ -2,9 +2,32 @@
   "name": "ddbjson",
   "version": "1.0.0",
   "description": "Convert JSON from / to DynamoDB JSON format on terminal!",
+  "keywords": [
+    "parse",
+    "convert",
+    "aws",
+    "cli",
+    "terminal",
+    "dynamodb",
+    "json",
+    "ddbjson",
+    "json-to-dynamodb",
+    "dynamodb-to-json"
+  ],
   "bin": "./lib/index.js",
-  "author": "duartealexf@gmail.com",
   "license": "MIT",
+  "author": "Alexandre Duarte <duartealexf@gmail.com> (https://github.com/duartealexf)",
+  "maintainers": [
+    "Alexandre Duarte <duartealexf@gmail.com> (https://github.com/duartealexf)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/duartealexf/ddbjson"
+  },
+  "homepage": "https://github.com/duartealexf/ddbjson",
+  "bugs": {
+    "url": "https://github.com/duartealexf/ddbjson/issues"
+  },
   "scripts": {
     "test": "jest",
     "test:integration": "node tests/integration/index.test.js"
