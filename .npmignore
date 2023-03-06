@@ -1,0 +1,10 @@
+.github
+.vscode
+coverage
+node_modules
+tests
+.editorconfig
+.gitignore
+.nvmrc
+jest.config.json
+jsconfig.json
