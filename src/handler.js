@@ -7,8 +7,8 @@ const get = require('lodash.get');
  */
 module.exports = (stdin, utils) => ({
   handle: async (converter, _subject, _property) => {
-    const subject = utils.trim(_subject ?? '');
-    const property = utils.trim(_property ?? '');
+    const subject = utils.trim(_subject || '');
+    const property = utils.trim(_property || '');
 
     try {
       if (!subject) {
