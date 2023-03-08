@@ -12,6 +12,7 @@ module.exports = (args, handler) => {
       const unmarshallCommands = ['unmarshall', 'u'];
       const marshallCommands = ['marshall', 'm'];
 
+      // eslint-disable-next-line no-unused-expressions
       yargs
         .command(unmarshallCommands, 'Converts a DynamoDB JSON format to regular JSON', (yargs) => {
           yargs

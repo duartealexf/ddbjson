@@ -15,10 +15,11 @@ jobs:
         with:
           node-version: 16
 
+      - name: Install packages
+        run: npm i
+        
       - name: Run tests
-        run: |
-          npm i
-          npm run test
+        run: npm run test
 
       - name: Report coverage
         uses: coverallsapp/github-action@v2
@@ -29,14 +30,14 @@ jobs:
     strategy:
       matrix:
         node:
-          - "12"
-          - "13"
-          - "14"
-          - "15"
-          - "16"
-          - "17"
-          - "18"
-          - "19"
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -46,10 +47,16 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Install packages
+        if: matrix.node < 16
+        run: npm i --production --ignore-scripts
+
+      - name: Install packages
+        if: matrix.node >= 16
+        run: npm i --omit=dev --ignore-scripts
+
       - name: Run tests
-        run: |
-          npm i --production
-          npm run test:integration
+        run: npm run test:integration
 
   win-integration-tests:
     name: Run integration tests on Windows
@@ -57,14 +64,14 @@ jobs:
     strategy:
       matrix:
         node:
-          - "12"
-          - "13"
-          - "14"
-          - "15"
-          - "16"
-          - "17"
-          - "18"
-          - "19"
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
 
     steps:
       - name: Checkout
@@ -75,7 +82,13 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Install packages
+        if: matrix.node < 16
+        run: npm i --production --ignore-scripts
+
+      - name: Install packages
+        if: matrix.node >= 16
+        run: npm i --omit=dev --ignore-scripts
+
       - name: Run tests
-        run: |
-          npm i --production
-          npm run test:integration
+        run: npm run test:integration

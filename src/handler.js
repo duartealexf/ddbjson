@@ -25,7 +25,7 @@ module.exports = (stdin, utils) => ({
         json = await new Promise((resolve) => {
           stdin.on('data', (chunk) => chunks.push(chunk));
           stdin.on('end', () => {
-            let contents = Buffer.concat(chunks).toString();
+            const contents = Buffer.concat(chunks).toString();
             resolve(contents);
           });
         });
