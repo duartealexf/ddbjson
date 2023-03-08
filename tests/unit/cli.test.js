@@ -2,6 +2,7 @@ const { resolve } = require('path');
 const { Duplex } = require('stream');
 const CLI = require('../../src/cli');
 const Handler = require('../../src/handler');
+const Utils = require('../../src/utils');
 const OutputSerializer = require('./serializer');
 
 expect.addSnapshotSerializer(OutputSerializer);
@@ -23,14 +24,18 @@ const pushStdin = async (mockStdin, ...msgs) => {
 /**
  * @param {string} filename
  */
-const getFixturePath = (filename) => resolve(__dirname, '..', 'fixtures', `${filename}.json`);
+const getFixturePath = (filename) => resolve(process.cwd(), 'tests', 'fixtures', `${filename}.json`);
 
 /**
  * @param {...string} args
  */
 const makeSut = (...args) => {
   const mockStdin = new Duplex();
-  const cli = CLI(args, Handler(mockStdin));
+
+  const utils = Utils('linux', '/');
+  const handler = Handler(mockStdin, utils);
+  const cli = CLI(args, handler);
+
   return { mockStdin, cli };
 };
 

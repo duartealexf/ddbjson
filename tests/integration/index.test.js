@@ -6,7 +6,14 @@ const teardown = require('./teardown');
 /**
  * @param {string} filename
  */
-const getFixturePath = (filename) => resolve(__dirname, '..', 'fixtures', `${filename}.json`);
+const getFixturePath = (filename) => resolve(process.cwd(), 'tests', 'fixtures', `${filename}.json`);
+
+const escapeQuotesOnWindows = (str) => {
+  if (process.platform === 'win32') {
+    return str.replace(/"/g, '\\"');
+  }
+  return str;
+};
 
 const marshalledFixturePath = getFixturePath('marshalled');
 const marshalledFixtureObj = require(marshalledFixturePath);
@@ -22,7 +29,13 @@ const unmarshalledFixtureSubObjectStr = JSON.stringify(unmarshalledFixtureSubObj
 
 const runTests = async () => {
   await assertMarshall({ arg: unmarshalledFixturePath }, marshalledFixtureStr, 'should marshall a JSON file');
-  await assertMarshall({ arg: unmarshalledFixtureStr }, marshalledFixtureStr, 'should marshall a JSON string');
+
+  await assertMarshall(
+    { arg: escapeQuotesOnWindows(unmarshalledFixtureStr) },
+    marshalledFixtureStr,
+    'should marshall a JSON string'
+  );
+
   await assertMarshall({ stdin: unmarshalledFixtureStr }, marshalledFixtureStr, 'should marshall from JSON stdin');
 
   await assertMarshall(
@@ -30,11 +43,13 @@ const runTests = async () => {
     marshalledFixtureSubObjectStr,
     'should marshall from JSON file having a property to get'
   );
+
   await assertMarshall(
-    { arg: unmarshalledFixtureStr, get: 'object' },
+    { arg: escapeQuotesOnWindows(unmarshalledFixtureStr), get: 'object' },
     marshalledFixtureSubObjectStr,
     'should marshall from JSON string having a property to get'
   );
+
   await assertMarshall(
     { stdin: unmarshalledFixtureStr, get: 'object' },
     marshalledFixtureSubObjectStr,
@@ -42,7 +57,13 @@ const runTests = async () => {
   );
 
   await assertUnmarshall({ arg: marshalledFixturePath }, unmarshalledFixtureStr, 'should unmarshall a JSON file');
-  await assertUnmarshall({ arg: marshalledFixtureStr }, unmarshalledFixtureStr, 'should unmarshall a JSON string');
+
+  await assertUnmarshall(
+    { arg: escapeQuotesOnWindows(marshalledFixtureStr) },
+    unmarshalledFixtureStr,
+    'should unmarshall a JSON string'
+  );
+
   await assertUnmarshall({ stdin: marshalledFixtureStr }, unmarshalledFixtureStr, 'should unmarshall from JSON stdin');
 
   await assertUnmarshall(
@@ -50,11 +71,13 @@ const runTests = async () => {
     unmarshalledFixtureSubObjectStr,
     'should unmarshall from JSON file having a property to get'
   );
+
   await assertUnmarshall(
-    { arg: marshalledFixtureStr, get: 'object.M' },
+    { arg: escapeQuotesOnWindows(marshalledFixtureStr), get: 'object.M' },
     unmarshalledFixtureSubObjectStr,
     'should unmarshall from JSON string having a property to get'
   );
+
   await assertUnmarshall(
     { stdin: marshalledFixtureStr, get: 'object.M' },
     unmarshalledFixtureSubObjectStr,

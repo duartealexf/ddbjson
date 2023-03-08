@@ -10,3 +10,10 @@ interface HandledStream {
 interface CLI {
   run(): void;
 }
+
+interface Utils {
+  trim: (str: string) => string;
+  trimJSON: (str: string) => string;
+  isAbsolutePath: (path: string) => boolean;
+  ensureAbsolutePath: (path: string) => string;
+}
