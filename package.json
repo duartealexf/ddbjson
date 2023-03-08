@@ -35,7 +35,7 @@
     "lint": "eslint .",
     "prepare": "husky install || echo 'no husky found'",
     "version": "standard-version && git push --follow-tags",
-    "release": "npm publish"
+    "release": "npm publish --ignore-scripts"
   },
   "dependencies": {
     "@aws-sdk/util-dynamodb": "^3.281.0",
