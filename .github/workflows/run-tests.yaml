@@ -23,8 +23,8 @@ jobs:
       - name: Report coverage
         uses: coverallsapp/github-action@v2
 
-  integration-tests:
-    name: Run integration tests
+  linux-integration-tests:
+    name: Run integration tests on Linux
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -45,6 +45,23 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+
+      - name: Run tests
+        run: |
+          npm i --production
+          npm run test:integration
+
+  win-integration-tests:
+    name: Run integration tests on Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
 
       - name: Run tests
         run: |
