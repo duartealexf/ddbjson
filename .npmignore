@@ -1,8 +1,11 @@
 .github
+.husky
 .vscode
+.eslintrc.js
 coverage
 node_modules
 tests
+commitlint.config.js
 .editorconfig
 .gitignore
 .nvmrc
