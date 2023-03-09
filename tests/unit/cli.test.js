@@ -2,7 +2,8 @@ const { resolve } = require('path');
 const { Duplex } = require('stream');
 const CLI = require('../../src/cli');
 const Handler = require('../../src/handler');
-const Utils = require('../../src/utils');
+const StringHelper = require('../../src/helpers/string');
+const PathHelper = require('../../src/helpers/path');
 const OutputSerializer = require('./serializer');
 
 expect.addSnapshotSerializer(OutputSerializer);
@@ -32,8 +33,9 @@ const getFixturePath = (filename) => resolve(process.cwd(), 'tests', 'fixtures',
 const makeSut = (...args) => {
   const mockStdin = new Duplex();
 
-  const utils = Utils('linux', '/');
-  const handler = Handler(mockStdin, utils);
+  const stringHelper = StringHelper();
+  const pathHelper = PathHelper('linux', '/');
+  const handler = Handler(mockStdin, pathHelper, stringHelper);
   const cli = CLI(args, handler);
 
   return { mockStdin, cli };
@@ -49,6 +51,7 @@ describe('ddbjson CLI', () => {
 
     jest.spyOn(console, 'log').mockImplementation((...args) => output.push(...args));
     jest.spyOn(console, 'error').mockImplementation((...args) => output.push(...args));
+    // @ts-ignore
     jest.spyOn(process, 'exit').mockImplementation((code) => {
       lastExitCode = code;
     });
@@ -118,7 +121,7 @@ describe('ddbjson CLI', () => {
         stdin: '{ ,"foo": "bar" }',
         expected: 'Error: Unexpected token ,',
       },
-    ])(`should print error when given $name argument is invalid JSON`, async ({ arg, stdin, expected }) => {
+    ])('should print error when given $name argument is invalid JSON', async ({ arg, stdin, expected }) => {
       const { cli, mockStdin } = makeSut(command, arg);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -136,7 +139,7 @@ describe('ddbjson CLI', () => {
         stdin: '{ "baz": "123" }',
         get: 'some',
       },
-    ])(`should print error when get argument is not in given $name`, async ({ arg, stdin, get }) => {
+    ])('should print error when get argument is not in given $name', async ({ arg, stdin, get }) => {
       const { cli, mockStdin } = makeSut(command, arg, '--get', get);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -153,7 +156,7 @@ describe('ddbjson CLI', () => {
       },
       { name: 'JSON string', arg: '{ "foo": "bar" }', get: 'foo' },
       { name: 'JSON stdin', arg: '-', stdin: '{ "baz": "123" }', get: 'baz' },
-    ])(`should print error when get argument is not an object in given $name`, async ({ arg, stdin, get }) => {
+    ])('should print error when get argument is not an object in given $name', async ({ arg, stdin, get }) => {
       const { cli, mockStdin } = makeSut(command, arg, '--get', get);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -171,7 +174,7 @@ describe('ddbjson CLI', () => {
       },
       { name: 'JSON string', arg: '{ "foo": "bar" }' },
       { name: 'JSON stdin', arg: '-', stdin: '{ "foo": "bar", "baz": 123 }' },
-    ])(`should print JSON when valid $name is given`, async ({ arg, stdin }) => {
+    ])('should print JSON when valid $name is given', async ({ arg, stdin }) => {
       const { cli, mockStdin } = makeSut('marshall', arg);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -197,7 +200,7 @@ describe('ddbjson CLI', () => {
         stdin: '{ "foo": "bar", "test": { "foo": "baz" } }',
         get: 'test',
       },
-    ])(`should print JSON when get argument is an object in given $name`, async ({ arg, stdin, get }) => {
+    ])('should print JSON when get argument is an object in given $name', async ({ arg, stdin, get }) => {
       const { cli, mockStdin } = makeSut('marshall', arg, '--get', get);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -215,7 +218,7 @@ describe('ddbjson CLI', () => {
       },
       { name: 'JSON string', arg: '{"foo":{"S":"bar"}}' },
       { name: 'JSON stdin', arg: '-', stdin: '{"foo":{"S":"bar"},"baz":{"N":"123"}}' },
-    ])(`should print JSON when valid $name is given`, async ({ arg, stdin }) => {
+    ])('should print JSON when valid $name is given', async ({ arg, stdin }) => {
       const { cli, mockStdin } = makeSut('unmarshall', arg);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -241,7 +244,7 @@ describe('ddbjson CLI', () => {
         stdin: '{"foo":{"S":"bar"},"test":{"M":{"foo":{"S":"baz"}}}}',
         get: 'test.M',
       },
-    ])(`should print JSON when get argument is an object in given $name`, async ({ arg, stdin, get }) => {
+    ])('should print JSON when get argument is an object in given $name', async ({ arg, stdin, get }) => {
       const { cli, mockStdin } = makeSut('unmarshall', arg, '--get', get);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);

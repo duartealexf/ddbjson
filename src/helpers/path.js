@@ -3,16 +3,10 @@ const { resolve } = require('path');
 /**
  * @param {NodeJS.Platform} platform
  * @param {string} cwd
- * @returns {Utils}
+ * @returns {PathHelper}
  */
 module.exports = (platform, cwd) => {
-  /** @type {Utils['trim']} */
-  const trim = (str) => str.replace(/^['" ]+|['" ]+$/g, '');
-
-  /** @type {Utils['trimJSON']} */
-  const trimJSON = (str) => str.replace(/^[^{[]+|[^}\]]+$/g, '');
-
-  /** @type {Utils['isAbsolutePath']} */
+  /** @type {PathHelper['isAbsolutePath']} */
   const isAbsolutePath = (path) => {
     if (platform === 'win32') {
       if (/^[a-zA-Z]:[\\/]/.test(path)) {
@@ -23,7 +17,7 @@ module.exports = (platform, cwd) => {
     return path.startsWith('/');
   };
 
-  /** @type {Utils['ensureAbsolutePath']} */
+  /** @type {PathHelper['ensureAbsolutePath']} */
   const ensureAbsolutePath = (path) => {
     if (isAbsolutePath(path)) {
       return path;
@@ -33,8 +27,6 @@ module.exports = (platform, cwd) => {
   };
 
   return {
-    trim,
-    trimJSON,
     isAbsolutePath,
     ensureAbsolutePath,
   };

@@ -2,13 +2,14 @@ const get = require('lodash.get');
 
 /**
  * @param {HandledStream} stdin
- * @param {Utils} utils
+ * @param {PathHelper} pathHelper
+ * @param {StringHelper} stringHelper
  * @returns {Handler}
  */
-module.exports = (stdin, utils) => ({
+module.exports = (stdin, pathHelper, stringHelper) => ({
   handle: async (converter, _subject, _property) => {
-    const subject = utils.trim(_subject || '');
-    const property = utils.trim(_property || '');
+    const subject = stringHelper.trim(_subject || '');
+    const property = stringHelper.trim(_property || '');
 
     try {
       if (!subject) {
@@ -32,7 +33,7 @@ module.exports = (stdin, utils) => ({
       } else {
         const { readFileSync, existsSync } = require('fs');
 
-        const filepath = utils.ensureAbsolutePath(subject);
+        const filepath = pathHelper.ensureAbsolutePath(subject);
 
         if (!existsSync(filepath)) {
           throw new Error(`File not found: ${filepath}`);
@@ -41,7 +42,7 @@ module.exports = (stdin, utils) => ({
         json = readFileSync(filepath, { encoding: 'utf8' }).toString();
       }
 
-      json = utils.trimJSON(json);
+      json = stringHelper.trimJSON(json);
       let object = JSON.parse(json);
 
       if (property) {
