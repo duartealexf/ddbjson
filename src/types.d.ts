@@ -1,3 +1,16 @@
+type ObjectLike = Record<string, unknown>;
+
+type ValidJSON = ObjectLike | ObjectLike[];
+
+type MockedInterface<T> = T extends Record<string, any>
+  ? {
+      [P in keyof T]: T[P] extends (...args: any) => any
+        ? jest.Mock<ReturnType<T[P]>, Parameters<T[P]>>
+        : T[P]
+    }
+  : never
+
+
 interface Handler {
   handle(actionFn: (data: any) => any, subject: string, property?: string): void;
 }
@@ -19,4 +32,8 @@ interface PathHelper {
 interface StringHelper {
   trim: (str: string) => string;
   trimJSON: (str: string) => string;
+}
+
+interface JSONHelper {
+  getProperty (path: string, subject: ValidJSON): unknown;
 }

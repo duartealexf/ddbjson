@@ -1,12 +1,11 @@
-const get = require('lodash.get');
-
 /**
  * @param {HandledStream} stdin
  * @param {PathHelper} pathHelper
  * @param {StringHelper} stringHelper
+ * @param {JSONHelper} jsonHelper
  * @returns {Handler}
  */
-module.exports = (stdin, pathHelper, stringHelper) => ({
+module.exports = (stdin, pathHelper, stringHelper, jsonHelper) => ({
   handle: async (converter, _subject, _property) => {
     const subject = stringHelper.trim(_subject || '');
     const property = stringHelper.trim(_property || '');
@@ -46,7 +45,7 @@ module.exports = (stdin, pathHelper, stringHelper) => ({
       let object = JSON.parse(json);
 
       if (property) {
-        object = get(object, property);
+        object = jsonHelper.getProperty(property, object);
 
         if (typeof object === 'undefined' || object === null) {
           throw new Error(`Property not found: '${property}'`);
