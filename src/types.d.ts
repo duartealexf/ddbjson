@@ -34,3 +34,7 @@ interface StringHelper {
   trim: (str: string) => string;
   trimJSON: (str: string) => string;
 }
+
+interface JSONHelper {
+  getProperty (path: string, subject: ValidJSON): unknown;
+}

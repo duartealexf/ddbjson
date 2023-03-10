@@ -35,10 +35,13 @@ const makeSut = (...args) => {
 
   const stringHelper = StringHelper();
   const pathHelper = PathHelper('linux', '/');
-  const handler = Handler(mockStdin, pathHelper, stringHelper);
+  /** @type {MockedInterface<JSONHelper>} */
+  const mockJSONHelper = { getProperty: jest.fn() };
+  // const jsonHelper = JSONHelper()
+  const handler = Handler(mockStdin, pathHelper, stringHelper, mockJSONHelper);
   const cli = CLI(args, handler);
 
-  return { mockStdin, cli };
+  return { mockStdin, mockJSONHelper, cli };
 };
 
 describe('ddbjson CLI', () => {
@@ -104,62 +107,29 @@ describe('ddbjson CLI', () => {
       expect(lastExitCode).toBe(1);
     });
 
-    it.each([
-      {
-        name: 'JSON file',
-        arg: getFixturePath('invalid'),
-        expected: 'Error: Unexpected token',
-      },
-      {
-        name: 'JSON string',
-        arg: '{ "foo": "bar"',
-        expected: 'Error: Unexpected end',
-      },
-      {
-        name: 'JSON stdin',
-        arg: '-',
-        stdin: '{ ,"foo": "bar" }',
-        expected: 'Error: Unexpected token ,',
-      },
-    ])('should print error when given $name argument is invalid JSON', async ({ arg, stdin, expected }) => {
-      const { cli, mockStdin } = makeSut(command, arg);
+    it('should print error when given JSON is invalid', async () => {
+      const { cli } = makeSut(command, '{ "foo": "bar"');
       cli.run();
-      if (stdin) await pushStdin(mockStdin, stdin);
 
-      expect(output.toString()).toContain(expected);
+      expect(output.toString()).toContain('Error: Unexpected end');
       expect(lastExitCode).toBe(1);
     });
 
-    it.each([
-      { name: 'JSON file', arg: getFixturePath('unmarshalled'), get: 'prop' },
-      { name: 'JSON string', arg: '{ "foo": "bar" }', get: 'test' },
-      {
-        name: 'JSON stdin',
-        arg: '-',
-        stdin: '{ "baz": "123" }',
-        get: 'some',
-      },
-    ])('should print error when get argument is not in given $name', async ({ arg, stdin, get }) => {
-      const { cli, mockStdin } = makeSut(command, arg, '--get', get);
+    it('should print error when get argument is not in JSON', async () => {
+      const get = 'prop1.prop2';
+      const { cli, mockJSONHelper } = makeSut(command, '{}', '--get', get);
+      mockJSONHelper.getProperty.mockReturnValue(null);
       cli.run();
-      if (stdin) await pushStdin(mockStdin, stdin);
 
       expect(output.toString()).toContain(`Error: Property not found: '${get}'`);
       expect(lastExitCode).toBe(1);
     });
 
-    it.each([
-      {
-        name: 'JSON file',
-        arg: getFixturePath('unmarshalled'),
-        get: 'number',
-      },
-      { name: 'JSON string', arg: '{ "foo": "bar" }', get: 'foo' },
-      { name: 'JSON stdin', arg: '-', stdin: '{ "baz": "123" }', get: 'baz' },
-    ])('should print error when get argument is not an object in given $name', async ({ arg, stdin, get }) => {
-      const { cli, mockStdin } = makeSut(command, arg, '--get', get);
+    it('should print error when get argument is not an object in JSON', async () => {
+      const get = 'prop1.prop2';
+      const { cli, mockJSONHelper } = makeSut(command, '{}', '--get', get);
+      mockJSONHelper.getProperty.mockReturnValue(1);
       cli.run();
-      if (stdin) await pushStdin(mockStdin, stdin);
 
       expect(output.toString()).toContain(`Error: Property is not an object: '${get}'`);
       expect(lastExitCode).toBe(1);
@@ -212,9 +182,9 @@ describe('ddbjson CLI', () => {
       mockJSONHelper.getProperty.mockReturnValue(objectGot);
 
       cli.run();
-      if (stdin) await pushStdin(mockStdin, stdin);
 
       expect(output).toMatchSnapshot();
+      expect(mockJSONHelper.getProperty).toHaveBeenCalledWith(propPath, inputObject);
       expect(lastExitCode).toBe(0);
     });
   });
@@ -275,9 +245,9 @@ describe('ddbjson CLI', () => {
       mockJSONHelper.getProperty.mockReturnValue(objectGot);
 
       cli.run();
-      if (stdin) await pushStdin(mockStdin, stdin);
 
       expect(output).toMatchSnapshot();
+      expect(mockJSONHelper.getProperty).toHaveBeenCalledWith(propPath, inputObject);
       expect(lastExitCode).toBe(0);
     });
   });

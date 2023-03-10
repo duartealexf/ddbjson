@@ -3,48 +3,18 @@
 exports[`ddbjson CLI marshall command success should print JSON returned from get argument 1`] = `
 [
   {
-    "array": {
+    "test1": {
       "L": [
         {
-          "S": "a"
+          "N": "1"
         },
         {
-          "S": "b"
+          "N": "2"
         },
         {
-          "S": "c"
+          "N": "3"
         }
       ]
-    },
-    "subobject": {
-      "M": {
-        "key1": {
-          "S": "value1"
-        },
-        "key2": {
-          "S": "value2"
-        }
-      }
-    }
-  }
-]
-`;
-
-exports[`ddbjson CLI marshall command success should print JSON when get argument is an object in given JSON stdin 1`] = `
-[
-  {
-    "foo": {
-      "S": "baz"
-    }
-  }
-]
-`;
-
-exports[`ddbjson CLI marshall command success should print JSON when get argument is an object in given JSON string 1`] = `
-[
-  {
-    "test": {
-      "S": "value"
     }
   }
 ]
@@ -197,17 +167,11 @@ exports[`ddbjson CLI marshall command success should print JSON when given valid
 ]
 `;
 
-exports[`ddbjson CLI unmarshall command success should print JSON when get argument is an object in given JSON file 1`] = `
+exports[`ddbjson CLI unmarshall command success should print JSON returned from get argument 1`] = `
 [
   {
-    "array": [
-      "a",
-      "b",
-      "c"
-    ],
-    "subobject": {
-      "key1": "value1",
-      "key2": "value2"
+    "object": {
+      "test": "value"
     }
   }
 ]
