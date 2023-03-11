@@ -2,7 +2,8 @@ const { resolve } = require('path');
 const { Duplex } = require('stream');
 const CLI = require('../../src/cli');
 const Handler = require('../../src/handler');
-const Utils = require('../../src/utils');
+const StringHelper = require('../../src/helpers/string');
+const PathHelper = require('../../src/helpers/path');
 const OutputSerializer = require('./serializer');
 
 expect.addSnapshotSerializer(OutputSerializer);
@@ -32,8 +33,9 @@ const getFixturePath = (filename) => resolve(process.cwd(), 'tests', 'fixtures',
 const makeSut = (...args) => {
   const mockStdin = new Duplex();
 
-  const utils = Utils('linux', '/');
-  const handler = Handler(mockStdin, utils);
+  const stringHelper = StringHelper();
+  const pathHelper = PathHelper('linux', '/');
+  const handler = Handler(mockStdin, pathHelper, stringHelper);
   const cli = CLI(args, handler);
 
   return { mockStdin, cli };
@@ -49,6 +51,7 @@ describe('ddbjson CLI', () => {
 
     jest.spyOn(console, 'log').mockImplementation((...args) => output.push(...args));
     jest.spyOn(console, 'error').mockImplementation((...args) => output.push(...args));
+    // @ts-ignore
     jest.spyOn(process, 'exit').mockImplementation((code) => {
       lastExitCode = code;
     });

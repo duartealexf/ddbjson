@@ -2,7 +2,8 @@ const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
 
 /**
  * @param {HandledStream} stdin
- * @param {Utils} utils
+ * @param {PathHelper} pathHelper
+ * @param {StringHelper} stringHelper
  * @returns {Handler}
  */
 module.exports = (stdin, pathHelper, stringHelper, jsonHelper) => {
