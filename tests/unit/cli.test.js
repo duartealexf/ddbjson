@@ -4,14 +4,15 @@ const CLI = require('../../src/cli');
 const Handler = require('../../src/handler');
 const StringHelper = require('../../src/helpers/string');
 const PathHelper = require('../../src/helpers/path');
-const OutputSerializer = require('./serializer');
+const StdOutSerializer = require('../serializers/stdout');
+const StdErrSerializer = require('../serializers/stderr');
 
-expect.addSnapshotSerializer(OutputSerializer);
+expect.addSnapshotSerializer(StdOutSerializer);
+expect.addSnapshotSerializer(StdErrSerializer);
 
 const nextTick = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 /**
- *
  * @param {Duplex} mockStdin
  * @param {...string} msgs
  * @returns
@@ -45,15 +46,17 @@ const makeSut = (...args) => {
 };
 
 describe('ddbjson CLI', () => {
-  const output = new OutputSerializer();
+  const stdout = new StdOutSerializer();
+  const stderr = new StdErrSerializer();
   let lastExitCode;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    output.reset();
+    stdout.reset();
+    stderr.reset();
 
-    jest.spyOn(console, 'log').mockImplementation((...args) => output.push(...args));
-    jest.spyOn(console, 'error').mockImplementation((...args) => output.push(...args));
+    jest.spyOn(console, 'log').mockImplementation((...args) => stdout.push(...args));
+    jest.spyOn(console, 'error').mockImplementation((...args) => stderr.push(...args));
     // @ts-ignore
     jest.spyOn(process, 'exit').mockImplementation((code) => {
       lastExitCode = code;
@@ -63,47 +66,55 @@ describe('ddbjson CLI', () => {
   describe('invalid arguments, no commands', () => {
     it('should print help when no arguments are given', () => {
       makeSut().cli.run();
-      expect(output.toString()).toContain('Usage:');
+      expect(stderr.output).toContain('Usage:');
+      expect(stdout.output).toBe('');
     });
 
     it('should print help when only json argument is given', () => {
       makeSut('{}').cli.run();
-      expect(output.toString()).toContain('Usage:');
+      expect(stderr.output).toContain('Usage:');
+      expect(stdout.output).toBe('');
     });
 
     it('should print help when only get argument is given', () => {
       makeSut('--get').cli.run();
-      expect(output.toString()).toContain('Usage:');
+      expect(stderr.output).toContain('Usage:');
+      expect(stdout.output).toBe('');
     });
 
     it('should print help when only get argument is given with a property', () => {
       makeSut('--get', 'property').cli.run();
-      expect(output.toString()).toContain('Usage:');
+      expect(stderr.output).toContain('Usage:');
+      expect(stdout.output).toBe('');
     });
   });
 
   describe.each(['marshall', 'unmarshall'])('invalid arguments, %s command given', (command) => {
     it('should print error when no more arguments are given', () => {
       makeSut(command).cli.run();
-      expect(output.toString()).toContain('Error: Please provide');
+      expect(stderr.output).toContain('Error: Please provide');
+      expect(stdout.output).toBe('');
       expect(lastExitCode).toBe(1);
     });
 
     it('should print error when no JSON is given and get argument is given', () => {
       makeSut(command, '--get').cli.run();
-      expect(output.toString()).toContain('Error: Please provide');
+      expect(stderr.output).toContain('Error: Please provide');
+      expect(stdout.output).toBe('');
       expect(lastExitCode).toBe(1);
     });
 
     it('should print error when no JSON is given and get argument is given with a property', () => {
       makeSut(command, '--get', 'property').cli.run();
-      expect(output.toString()).toContain('Error: Please provide');
+      expect(stderr.output).toContain('Error: Please provide');
+      expect(stdout.output).toBe('');
       expect(lastExitCode).toBe(1);
     });
 
     it('should print error when given JSON file does not exist', () => {
       makeSut(command, getFixturePath('bad')).cli.run();
-      expect(output.toString()).toContain('Error: File not found');
+      expect(stderr.output).toContain('Error: File not found');
+      expect(stdout.output).toBe('');
       expect(lastExitCode).toBe(1);
     });
 
@@ -111,7 +122,8 @@ describe('ddbjson CLI', () => {
       const { cli } = makeSut(command, '{ "foo": "bar"');
       cli.run();
 
-      expect(output.toString()).toContain('Error: Unexpected end');
+      expect(stderr.output).toContain('Error: Unexpected end');
+      expect(stdout.output).toBe('');
       expect(lastExitCode).toBe(1);
     });
 
@@ -119,9 +131,11 @@ describe('ddbjson CLI', () => {
       const get = 'prop1.prop2';
       const { cli, mockJSONHelper } = makeSut(command, '{}', '--get', get);
       mockJSONHelper.getProperty.mockReturnValue(null);
+
       cli.run();
 
-      expect(output.toString()).toContain(`Error: Property not found: '${get}'`);
+      expect(stderr.output).toContain(`Error: Property not found: '${get}'`);
+      expect(stdout.output).toBe('');
       expect(lastExitCode).toBe(1);
     });
 
@@ -129,9 +143,11 @@ describe('ddbjson CLI', () => {
       const get = 'prop1.prop2';
       const { cli, mockJSONHelper } = makeSut(command, '{}', '--get', get);
       mockJSONHelper.getProperty.mockReturnValue(1);
+
       cli.run();
 
-      expect(output.toString()).toContain(`Error: Property is not an object: '${get}'`);
+      expect(stderr.output).toContain(`Error: Property is not an object: '${get}'`);
+      expect(stdout.output).toBe('');
       expect(lastExitCode).toBe(1);
     });
   });
@@ -146,10 +162,12 @@ describe('ddbjson CLI', () => {
       { name: 'JSON stdin', arg: '-', stdin: '{ "foo": "bar", "baz": 123 }' },
     ])('should print JSON when valid $name is given', async ({ arg, stdin }) => {
       const { cli, mockStdin } = makeSut('marshall', arg);
+
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
 
-      expect(output).toMatchSnapshot();
+      expect(stderr.output).toBe('');
+      expect(stdout).toMatchSnapshot();
       expect(lastExitCode).toBe(0);
     });
 
@@ -163,7 +181,8 @@ describe('ddbjson CLI', () => {
 
       cli.run();
 
-      expect(output).toMatchSnapshot();
+      expect(stderr.output).toBe('');
+      expect(stdout).toMatchSnapshot();
       expect(mockJSONHelper.getProperty).toHaveBeenCalledWith(propPath, inputObject);
       expect(lastExitCode).toBe(0);
     });
@@ -182,7 +201,8 @@ describe('ddbjson CLI', () => {
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
 
-      expect(output).toMatchSnapshot();
+      expect(stderr.output).toBe('');
+      expect(stdout).toMatchSnapshot();
       expect(lastExitCode).toBe(0);
     });
 
@@ -196,7 +216,8 @@ describe('ddbjson CLI', () => {
 
       cli.run();
 
-      expect(output).toMatchSnapshot();
+      expect(stderr.output).toBe('');
+      expect(stdout).toMatchSnapshot();
       expect(mockJSONHelper.getProperty).toHaveBeenCalledWith(propPath, inputObject);
       expect(lastExitCode).toBe(0);
     });
