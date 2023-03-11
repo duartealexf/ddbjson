@@ -10,9 +10,10 @@ type MockedInterface<T> = T extends Record<string, any>
     }
   : never
 
+type Action = 'marshall' | 'unmarshall';
 
 interface Handler {
-  handle(actionFn: (data: any) => any, subject: string, property?: string): void;
+  handle(action: Action, subject: string, property?: string): void;
 }
 
 interface HandledStream {

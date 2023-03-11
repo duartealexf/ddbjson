@@ -3,6 +3,8 @@ module.exports = class StdOutSerializer {
   contents = [];
 
   get output () {
+    if (this.contents.length === 0) return '';
+    if (this.contents.length === 1) return JSON.stringify(this.contents[0]);
     return this.contents.join('');
   }
 

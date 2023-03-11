@@ -15,74 +15,42 @@ const escapeQuotesOnWindows = (str) => {
   return str;
 };
 
-const marshalledFixturePath = getFixturePath('marshalled');
-const marshalledFixtureObj = require(marshalledFixturePath);
-const marshalledFixtureStr = JSON.stringify(marshalledFixtureObj);
-const marshalledFixtureSubObject = marshalledFixtureObj.object.M;
-const marshalledFixtureSubObjectStr = JSON.stringify(marshalledFixtureSubObject);
+const unmarshalledPath = getFixturePath('unmarshalled');
+const unmarshalledObj = require(unmarshalledPath);
+const unmarshalledStr = JSON.stringify(unmarshalledObj);
+const unmarshalledSubObject = unmarshalledObj.object;
+const unmarshalledSubObjectStr = JSON.stringify(unmarshalledSubObject);
+const unmarshalledArrayStr = JSON.stringify(require(getFixturePath('unmarshalled-array')));
+const unmarshalledArrayOfArraysStr = JSON.stringify(require(getFixturePath('unmarshalled-array-arrays')));
 
-const unmarshalledFixturePath = getFixturePath('unmarshalled');
-const unmarshalledFixtureObj = require(unmarshalledFixturePath);
-const unmarshalledFixtureStr = JSON.stringify(unmarshalledFixtureObj);
-const unmarshalledFixtureSubObject = unmarshalledFixtureObj.object;
-const unmarshalledFixtureSubObjectStr = JSON.stringify(unmarshalledFixtureSubObject);
+const marshalledPath = getFixturePath('marshalled');
+const marshalledObj = require(marshalledPath);
+const marshalledStr = JSON.stringify(marshalledObj);
+const marshalledSubObject = marshalledObj.object.M;
+const marshalledSubObjectStr = JSON.stringify(marshalledSubObject);
+const marshalledArrayStr = JSON.stringify(require(getFixturePath('marshalled-array')));
+const marshalledArrayOfArraysStr = JSON.stringify(require(getFixturePath('marshalled-array-arrays')));
 
 const runTests = async () => {
-  await assertMarshall({ arg: unmarshalledFixturePath }, marshalledFixtureStr, 'should marshall a JSON file');
+  await assertMarshall({ arg: unmarshalledPath }, marshalledStr, 'should marshall a JSON file');
+  await assertMarshall({ arg: escapeQuotesOnWindows(unmarshalledStr) }, marshalledStr, 'should marshall a JSON string');
+  await assertMarshall({ stdin: unmarshalledStr }, marshalledStr, 'should marshall from JSON stdin');
+  await assertMarshall({ stdin: unmarshalledArrayStr }, marshalledArrayStr, 'should marshall an array');
+  await assertMarshall({ stdin: unmarshalledArrayOfArraysStr }, marshalledArrayOfArraysStr, 'should marshall an array of arrays');
 
-  await assertMarshall(
-    { arg: escapeQuotesOnWindows(unmarshalledFixtureStr) },
-    marshalledFixtureStr,
-    'should marshall a JSON string'
-  );
+  await assertMarshall({ arg: unmarshalledPath, get: 'object' }, marshalledSubObjectStr, 'should marshall from JSON file having a property to get');
+  await assertMarshall({ arg: escapeQuotesOnWindows(unmarshalledStr), get: 'object' }, marshalledSubObjectStr, 'should marshall from JSON string having a property to get');
+  await assertMarshall({ stdin: unmarshalledStr, get: 'object' }, marshalledSubObjectStr, 'should marshall from JSON stdin having a property to get');
 
-  await assertMarshall({ stdin: unmarshalledFixtureStr }, marshalledFixtureStr, 'should marshall from JSON stdin');
+  await assertUnmarshall({ arg: marshalledPath }, unmarshalledStr, 'should unmarshall a JSON file');
+  await assertUnmarshall({ arg: escapeQuotesOnWindows(marshalledStr) }, unmarshalledStr, 'should unmarshall a JSON string');
+  await assertUnmarshall({ stdin: marshalledStr }, unmarshalledStr, 'should unmarshall from JSON stdin');
+  await assertUnmarshall({ stdin: marshalledArrayStr }, unmarshalledArrayStr, 'should unmarshall an array');
+  await assertUnmarshall({ stdin: marshalledArrayOfArraysStr }, unmarshalledArrayOfArraysStr, 'should unmarshall an array of arrays');
 
-  await assertMarshall(
-    { arg: unmarshalledFixturePath, get: 'object' },
-    marshalledFixtureSubObjectStr,
-    'should marshall from JSON file having a property to get'
-  );
-
-  await assertMarshall(
-    { arg: escapeQuotesOnWindows(unmarshalledFixtureStr), get: 'object' },
-    marshalledFixtureSubObjectStr,
-    'should marshall from JSON string having a property to get'
-  );
-
-  await assertMarshall(
-    { stdin: unmarshalledFixtureStr, get: 'object' },
-    marshalledFixtureSubObjectStr,
-    'should marshall from JSON stdin having a property to get'
-  );
-
-  await assertUnmarshall({ arg: marshalledFixturePath }, unmarshalledFixtureStr, 'should unmarshall a JSON file');
-
-  await assertUnmarshall(
-    { arg: escapeQuotesOnWindows(marshalledFixtureStr) },
-    unmarshalledFixtureStr,
-    'should unmarshall a JSON string'
-  );
-
-  await assertUnmarshall({ stdin: marshalledFixtureStr }, unmarshalledFixtureStr, 'should unmarshall from JSON stdin');
-
-  await assertUnmarshall(
-    { arg: marshalledFixturePath, get: 'object.M' },
-    unmarshalledFixtureSubObjectStr,
-    'should unmarshall from JSON file having a property to get'
-  );
-
-  await assertUnmarshall(
-    { arg: escapeQuotesOnWindows(marshalledFixtureStr), get: 'object.M' },
-    unmarshalledFixtureSubObjectStr,
-    'should unmarshall from JSON string having a property to get'
-  );
-
-  await assertUnmarshall(
-    { stdin: marshalledFixtureStr, get: 'object.M' },
-    unmarshalledFixtureSubObjectStr,
-    'should unmarshall from JSON stdin having a property to get'
-  );
+  await assertUnmarshall({ arg: marshalledPath, get: 'object.M' }, unmarshalledSubObjectStr, 'should unmarshall from JSON file having a property to get');
+  await assertUnmarshall({ arg: escapeQuotesOnWindows(marshalledStr), get: 'object.M' }, unmarshalledSubObjectStr, 'should unmarshall from JSON string having a property to get');
+  await assertUnmarshall({ stdin: marshalledStr, get: 'object.M' }, unmarshalledSubObjectStr, 'should unmarshall from JSON stdin having a property to get');
 };
 
 const bootstrap = async () => {
