@@ -20,41 +20,6 @@ exports[`ddbjson CLI marshall command success should print JSON returned from ge
 ]
 `;
 
-exports[`ddbjson CLI marshall command success should print JSON when given valid JSON array 1`] = `
-[
-  [
-    {
-      "M": {
-        "object": {
-          "M": {
-            "key1": {
-              "S": "value1"
-            },
-            "key2": {
-              "S": "value2"
-            }
-          }
-        }
-      }
-    },
-    {
-      "M": {
-        "object": {
-          "M": {
-            "key3": {
-              "S": "value3"
-            },
-            "key4": {
-              "S": "value4"
-            }
-          }
-        }
-      }
-    }
-  ]
-]
-`;
-
 exports[`ddbjson CLI marshall command success should print JSON when given valid JSON array of arrays 1`] = `
 [
   [
