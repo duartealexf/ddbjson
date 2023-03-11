@@ -36,5 +36,5 @@ interface StringHelper {
 }
 
 interface JSONHelper {
-  getProperty (path: string, subject: ValidJSON): unknown;
+  getProperty(subject: ValidJSON, path: string): unknown;
 }
