@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ddbjson CLI marshall command success should print JSON when get argument is an object in given JSON file 1`] = `
+exports[`ddbjson CLI marshall command success should print JSON returned from get argument 1`] = `
 [
   {
     "array": {
@@ -50,7 +50,85 @@ exports[`ddbjson CLI marshall command success should print JSON when get argumen
 ]
 `;
 
-exports[`ddbjson CLI marshall command success should print JSON when valid JSON file is given 1`] = `
+exports[`ddbjson CLI marshall command success should print JSON when given valid JSON array 1`] = `
+[
+  [
+    {
+      "M": {
+        "object": {
+          "M": {
+            "key1": {
+              "S": "value1"
+            },
+            "key2": {
+              "S": "value2"
+            }
+          }
+        }
+      }
+    },
+    {
+      "M": {
+        "object": {
+          "M": {
+            "key3": {
+              "S": "value3"
+            },
+            "key4": {
+              "S": "value4"
+            }
+          }
+        }
+      }
+    }
+  ]
+]
+`;
+
+exports[`ddbjson CLI marshall command success should print JSON when given valid JSON array of arrays 1`] = `
+[
+  [
+    {
+      "L": [
+        {
+          "M": {
+            "foo": {
+              "S": "bar"
+            }
+          }
+        },
+        {
+          "M": {
+            "baz": {
+              "S": "qux"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "L": [
+        {
+          "M": {
+            "foo": {
+              "S": "bar"
+            }
+          }
+        },
+        {
+          "M": {
+            "baz": {
+              "S": "qux"
+            }
+          }
+        }
+      ]
+    }
+  ]
+]
+`;
+
+exports[`ddbjson CLI marshall command success should print JSON when given valid JSON file 1`] = `
 [
   {
     "object": {
@@ -96,7 +174,7 @@ exports[`ddbjson CLI marshall command success should print JSON when valid JSON 
 ]
 `;
 
-exports[`ddbjson CLI marshall command success should print JSON when valid JSON stdin is given 1`] = `
+exports[`ddbjson CLI marshall command success should print JSON when given valid JSON stdin 1`] = `
 [
   {
     "foo": {
@@ -109,7 +187,7 @@ exports[`ddbjson CLI marshall command success should print JSON when valid JSON 
 ]
 `;
 
-exports[`ddbjson CLI marshall command success should print JSON when valid JSON string is given 1`] = `
+exports[`ddbjson CLI marshall command success should print JSON when given valid JSON string 1`] = `
 [
   {
     "foo": {
@@ -135,23 +213,49 @@ exports[`ddbjson CLI unmarshall command success should print JSON when get argum
 ]
 `;
 
-exports[`ddbjson CLI unmarshall command success should print JSON when get argument is an object in given JSON stdin 1`] = `
+exports[`ddbjson CLI unmarshall command success should print JSON when given valid JSON array 1`] = `
 [
-  {
-    "foo": "baz"
-  }
+  [
+    {
+      "object": {
+        "key1": "value1",
+        "key2": "value2"
+      }
+    },
+    {
+      "object": {
+        "key3": "value3",
+        "key4": "value4"
+      }
+    }
+  ]
 ]
 `;
 
-exports[`ddbjson CLI unmarshall command success should print JSON when get argument is an object in given JSON string 1`] = `
+exports[`ddbjson CLI unmarshall command success should print JSON when given valid JSON array of arrays 1`] = `
 [
-  {
-    "test": "value"
-  }
+  [
+    [
+      {
+        "foo": "bar"
+      },
+      {
+        "baz": "qux"
+      }
+    ],
+    [
+      {
+        "foo": "bar"
+      },
+      {
+        "baz": "qux"
+      }
+    ]
+  ]
 ]
 `;
 
-exports[`ddbjson CLI unmarshall command success should print JSON when valid JSON file is given 1`] = `
+exports[`ddbjson CLI unmarshall command success should print JSON when given valid JSON file 1`] = `
 [
   {
     "object": {
@@ -173,7 +277,7 @@ exports[`ddbjson CLI unmarshall command success should print JSON when valid JSO
 ]
 `;
 
-exports[`ddbjson CLI unmarshall command success should print JSON when valid JSON stdin is given 1`] = `
+exports[`ddbjson CLI unmarshall command success should print JSON when given valid JSON stdin 1`] = `
 [
   {
     "foo": "bar",
@@ -182,7 +286,7 @@ exports[`ddbjson CLI unmarshall command success should print JSON when valid JSO
 ]
 `;
 
-exports[`ddbjson CLI unmarshall command success should print JSON when valid JSON string is given 1`] = `
+exports[`ddbjson CLI unmarshall command success should print JSON when given valid JSON string 1`] = `
 [
   {
     "foo": "bar"

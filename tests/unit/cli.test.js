@@ -118,7 +118,7 @@ describe('ddbjson CLI', () => {
         stdin: '{ ,"foo": "bar" }',
         expected: 'Error: Unexpected token ,',
       },
-    ])(`should print error when given $name argument is invalid JSON`, async ({ arg, stdin, expected }) => {
+    ])('should print error when given $name argument is invalid JSON', async ({ arg, stdin, expected }) => {
       const { cli, mockStdin } = makeSut(command, arg);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -136,7 +136,7 @@ describe('ddbjson CLI', () => {
         stdin: '{ "baz": "123" }',
         get: 'some',
       },
-    ])(`should print error when get argument is not in given $name`, async ({ arg, stdin, get }) => {
+    ])('should print error when get argument is not in given $name', async ({ arg, stdin, get }) => {
       const { cli, mockStdin } = makeSut(command, arg, '--get', get);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -153,7 +153,7 @@ describe('ddbjson CLI', () => {
       },
       { name: 'JSON string', arg: '{ "foo": "bar" }', get: 'foo' },
       { name: 'JSON stdin', arg: '-', stdin: '{ "baz": "123" }', get: 'baz' },
-    ])(`should print error when get argument is not an object in given $name`, async ({ arg, stdin, get }) => {
+    ])('should print error when get argument is not an object in given $name', async ({ arg, stdin, get }) => {
       const { cli, mockStdin } = makeSut(command, arg, '--get', get);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -165,13 +165,10 @@ describe('ddbjson CLI', () => {
 
   describe('marshall command success', () => {
     it.each([
-      {
-        name: 'JSON file',
-        arg: getFixturePath('unmarshalled'),
-      },
+      { name: 'JSON file', arg: getFixturePath('unmarshalled') },
       { name: 'JSON string', arg: '{ "foo": "bar" }' },
       { name: 'JSON stdin', arg: '-', stdin: '{ "foo": "bar", "baz": 123 }' },
-    ])(`should print JSON when valid $name is given`, async ({ arg, stdin }) => {
+    ])('should print JSON when given valid $name', async ({ arg, stdin }) => {
       const { cli, mockStdin } = makeSut('marshall', arg);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -180,25 +177,37 @@ describe('ddbjson CLI', () => {
       expect(lastExitCode).toBe(0);
     });
 
-    it.each([
-      {
-        name: 'JSON file',
-        arg: getFixturePath('unmarshalled'),
-        get: 'object',
-      },
-      {
-        name: 'JSON string',
-        arg: '{ "foo": "bar", "object": { "test": "value" } }',
-        get: 'object',
-      },
-      {
-        name: 'JSON stdin',
-        arg: '-',
-        stdin: '{ "foo": "bar", "test": { "foo": "baz" } }',
-        get: 'test',
-      },
-    ])(`should print JSON when get argument is an object in given $name`, async ({ arg, stdin, get }) => {
-      const { cli, mockStdin } = makeSut('marshall', arg, '--get', get);
+    it('should print JSON when given valid JSON array', () => {
+      const { cli } = makeSut('marshall', getFixturePath('unmarshalled-array'));
+
+      cli.run();
+
+      expect(stderr.output).toBe('');
+      // expect(stdout).toMatchSnapshot();
+      expect(lastExitCode).toBe(0);
+    });
+
+    it('should print JSON when given valid JSON array of arrays', () => {
+      const { cli } = makeSut('marshall', JSON.stringify([
+        [{ foo: 'bar' }, { baz: 'qux' }],
+        [{ foo: 'bar' }, { baz: 'qux' }],
+      ]));
+
+      cli.run();
+
+      expect(stderr.output).toBe('');
+      expect(stdout).toMatchSnapshot();
+      expect(lastExitCode).toBe(0);
+    });
+
+    it('should print JSON returned from get argument', async () => {
+      const objectGot = { test1: [1, 2, 3] };
+      const inputObject = { test2: { a: 1 } };
+      const propPath = 'prop1.prop2';
+      const { cli, mockJSONHelper } = makeSut('marshall', JSON.stringify(inputObject), '--get', propPath);
+
+      mockJSONHelper.getProperty.mockReturnValue(objectGot);
+
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
 
@@ -209,13 +218,10 @@ describe('ddbjson CLI', () => {
 
   describe('unmarshall command success', () => {
     it.each([
-      {
-        name: 'JSON file',
-        arg: getFixturePath('marshalled'),
-      },
+      { name: 'JSON file', arg: getFixturePath('marshalled') },
       { name: 'JSON string', arg: '{"foo":{"S":"bar"}}' },
       { name: 'JSON stdin', arg: '-', stdin: '{"foo":{"S":"bar"},"baz":{"N":"123"}}' },
-    ])(`should print JSON when valid $name is given`, async ({ arg, stdin }) => {
+    ])('should print JSON when given valid $name', async ({ arg, stdin }) => {
       const { cli, mockStdin } = makeSut('unmarshall', arg);
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
@@ -224,25 +230,47 @@ describe('ddbjson CLI', () => {
       expect(lastExitCode).toBe(0);
     });
 
-    it.each([
-      {
-        name: 'JSON file',
-        arg: getFixturePath('marshalled'),
-        get: 'object.M',
-      },
-      {
-        name: 'JSON string',
-        arg: '{"foo":{"S":"bar"},"object":{"M":{"test":{"S":"value"}}}}',
-        get: 'object.M',
-      },
-      {
-        name: 'JSON stdin',
-        arg: '-',
-        stdin: '{"foo":{"S":"bar"},"test":{"M":{"foo":{"S":"baz"}}}}',
-        get: 'test.M',
-      },
-    ])(`should print JSON when get argument is an object in given $name`, async ({ arg, stdin, get }) => {
-      const { cli, mockStdin } = makeSut('unmarshall', arg, '--get', get);
+    it('should print JSON when given valid JSON array', () => {
+      const { cli } = makeSut('unmarshall', getFixturePath('marshalled-array'));
+
+      cli.run();
+
+      expect(stderr.output).toBe('');
+      expect(stdout).toMatchSnapshot();
+      expect(lastExitCode).toBe(0);
+    });
+
+    it('should print JSON when given valid JSON array of arrays', () => {
+      const { cli } = makeSut('unmarshall', JSON.stringify([
+        {
+          L: [
+            { M: { foo: { S: 'bar' } } },
+            { M: { baz: { S: 'qux' } } },
+          ],
+        },
+        {
+          L: [
+            { M: { foo: { S: 'bar' } } },
+            { M: { baz: { S: 'qux' } } },
+          ],
+        },
+      ]));
+
+      cli.run();
+
+      expect(stderr.output).toBe('');
+      expect(stdout).toMatchSnapshot();
+      expect(lastExitCode).toBe(0);
+    });
+
+    it('should print JSON returned from get argument', async () => {
+      const objectGot = { object: { M: { test: { S: 'value' } } } };
+      const inputObject = { test2: { a: 1 } };
+      const propPath = 'prop1.prop2';
+      const { cli, mockJSONHelper } = makeSut('unmarshall', JSON.stringify(inputObject), '--get', propPath);
+
+      mockJSONHelper.getProperty.mockReturnValue(objectGot);
+
       cli.run();
       if (stdin) await pushStdin(mockStdin, stdin);
 
