@@ -183,7 +183,7 @@ describe('ddbjson CLI', () => {
 
       expect(stderr.output).toBe('');
       expect(stdout).toMatchSnapshot();
-      expect(mockJSONHelper.getProperty).toHaveBeenCalledWith(propPath, inputObject);
+      expect(mockJSONHelper.getProperty).toHaveBeenCalledWith(inputObject, propPath);
       expect(lastExitCode).toBe(0);
     });
   });
@@ -218,7 +218,7 @@ describe('ddbjson CLI', () => {
 
       expect(stderr.output).toBe('');
       expect(stdout).toMatchSnapshot();
-      expect(mockJSONHelper.getProperty).toHaveBeenCalledWith(propPath, inputObject);
+      expect(mockJSONHelper.getProperty).toHaveBeenCalledWith(inputObject, propPath);
       expect(lastExitCode).toBe(0);
     });
   });

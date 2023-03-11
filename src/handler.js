@@ -45,7 +45,7 @@ module.exports = (stdin, pathHelper, stringHelper, jsonHelper) => ({
       let object = JSON.parse(json);
 
       if (property) {
-        object = jsonHelper.getProperty(property, object);
+        object = jsonHelper.getProperty(object, property);
 
         if (typeof object === 'undefined' || object === null) {
           throw new Error(`Property not found: '${property}'`);
