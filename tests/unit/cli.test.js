@@ -174,9 +174,9 @@ describe('ddbjson CLI', () => {
     it('should print JSON returned from get argument', async () => {
       const objectGot = { test1: [1, 2, 3] };
       const inputObject = { test2: { a: 1 } };
-      // const resultStr = JSON.stringify(objectGot);
       const propPath = 'prop1.prop2';
       const { cli, mockJSONHelper } = makeSut('marshall', JSON.stringify(inputObject), '--get', propPath);
+
       mockJSONHelper.getProperty.mockReturnValue(objectGot);
 
       cli.run();
@@ -209,9 +209,9 @@ describe('ddbjson CLI', () => {
     it('should print JSON returned from get argument', async () => {
       const objectGot = { object: { M: { test: { S: 'value' } } } };
       const inputObject = { test2: { a: 1 } };
-      // const resultStr = JSON.stringify(objectGot);
       const propPath = 'prop1.prop2';
       const { cli, mockJSONHelper } = makeSut('unmarshall', JSON.stringify(inputObject), '--get', propPath);
+
       mockJSONHelper.getProperty.mockReturnValue(objectGot);
 
       cli.run();
