@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@aws-sdk/util-dynamodb": "^3.281.0",
-    "lodash.get": "^4.4.2",
     "yargs": "^17.7.1"
   },
   "devDependencies": {
