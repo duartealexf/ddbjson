@@ -11,3 +11,5 @@ commitlint.config.js
 .nvmrc
 jest.config.json
 jsconfig.json
+*.d.ts
+*.tgz
