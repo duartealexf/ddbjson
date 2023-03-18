@@ -1,0 +1,16 @@
+[
+  {
+    "type": "fruit",
+    "foodItems": [
+      "apple",
+      "kiwi"
+    ]
+  },
+  {
+    "type": "meat",
+    "foodItems": [
+      "beef",
+      "bacon"
+    ]
+  }
+]

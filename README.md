@@ -156,9 +156,9 @@ $ curl https://food.com/api | ddbjson m -
 
 ## 🍰 Parse only a subset of JSON using `-g`
 
+- Use dot notation to pass in a property path.
 - Useful when reading from AWS CLI DynamoDB commands ([read more](#-when-reading-from-aws-cli-dynamodb-commands)).
-- Pass in the full path to the JSON property.
-- The given property must be an object or array.
+- Get properties of objects, array item by index or * for all items.
 
 ```json
 # food.json
@@ -178,12 +178,23 @@ $ curl https://food.com/api | ddbjson m -
 }
 ```
 
+### Convert only an item in the array
+
 ```sh
 $ ddbjson m -g "fruits.0.benefits" food.json
 
 # [{"S":"fiber"},{"S":"vitamin b"},{"S":"vitamin e"}]
 ```
 
+### Convert all items in the array
+
+```sh
+$ ddbjson m -g "fruits.*.name" food.json
+
+# [{"S":"apple"},{"S":"kiwi"}]
+```
+
+> Note: `-g "fruits.*"` and `-g "fruits"` are the same because they both return all items in the array.
 
 <br />
 
@@ -238,13 +249,15 @@ $ aws dynamodb scan --table-name food
             ...
 ```
 
-Use `-g "Items.0"` (or another index) when unmarshalling output from `aws dynamodb scan`. Unfortunately the output from AWS is not friendly so you can't unmarshall all items:
+Use `-g "Items"` to unmarshall output from `aws dynamodb scan`.
 
 ```sh
-$ aws dynamodb scan --table-name food | ddbjson u -g "Items.0" -
+$ aws dynamodb scan --table-name food | ddbjson u -g "Items" -
 
-# {"foodItems":["apple","kiwi"],"type":"fruit"}
+# [{"foodItems":["apple","kiwi"],"type":"fruit"},...]
 ```
+
+<br />
 
 # 💡 More usage ideas
 

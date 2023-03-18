@@ -70,9 +70,18 @@ module.exports = (stdin, pathHelper, stringHelper, jsonHelper) => {
         const converter = converters[action];
 
         if (Array.isArray(object) && action === 'unmarshall') {
-          object = { items: { L: object } };
-          converted = converter(object);
-          converted = converted.items;
+          try {
+            /**
+             * First try converting array of DynamoDB items.
+             */
+            converted = object.map(converter);
+          } catch (e) {
+            /**
+             * Otherwise convert List type.
+             */
+            converted = converter(object);
+            converted = Object.values(converted);
+          }
         } else {
           converted = converter(object);
         }
