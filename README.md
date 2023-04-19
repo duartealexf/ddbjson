@@ -1,4 +1,4 @@
-# 💫 Convert JSON from / to DynamoDB JSON on CLI! 🙌
+# 💫 JSON from/to DynamoDB JSON on CLI
 
 [![npm](https://img.shields.io/npm/v/ddbjson.svg)](https://img.shields.io/npm/v/ddbjson.svg)
 [![node](https://img.shields.io/node/v/ddbjson.svg)](https://img.shields.io/node/v/ddbjson.svg)
@@ -6,11 +6,12 @@
 [![coverage status](https://coveralls.io/repos/github/duartealexf/ddbjson/badge.svg)](https://coveralls.io/github/duartealexf/ddbjson)
 [![license](https://img.shields.io/npm/l/ddbjson.svg)](https://img.shields.io/npm/l/ddbjson.svg)
 
-Use `ddbjson` to convert from DynamoDB JSON format to regular JSON and vice versa on any terminal:
+Use `ddbjson` to convert from DynamoDB JSON format to regular JSON and vice versa (marshall/unmarshall) on any terminal:
 
-- 📄 Pass in a file path to output the converted string!
-- ✏️ Pass in a JSON string to be converted!
-- ⛓ Pipe in JSON from another command to read from stdin!
+- 🔥 Works on all platforms!
+- 📄 Convert a file from given file path!
+- ✏️ Convert a JSON string!
+- ⛓ Read from stdin: pipe in JSON from another command!
 - 🍰 Read and convert only a subset of the JSON!
 - 🤝 The output can be piped or redirected to other commands!
 - 🧰 Integrate it into your workflow, when using AWS DynamoDB CLI!
