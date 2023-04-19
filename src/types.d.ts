@@ -1,5 +1,19 @@
+type ObjectLike = Record<string, unknown>;
+
+type ValidJSON = ObjectLike | ObjectLike[];
+
+type MockedInterface<T> = T extends Record<string, any>
+  ? {
+      [P in keyof T]: T[P] extends (...args: any) => any
+        ? jest.Mock<ReturnType<T[P]>, Parameters<T[P]>>
+        : T[P]
+    }
+  : never
+
+type Action = 'marshall' | 'unmarshall';
+
 interface Handler {
-  handle(actionFn: (data: any) => any, subject: string, property?: string): void;
+  handle(action: Action, subject: string, property?: string): void;
 }
 
 interface HandledStream {
@@ -11,9 +25,16 @@ interface CLI {
   run(): void;
 }
 
-interface Utils {
-  trim: (str: string) => string;
-  trimJSON: (str: string) => string;
+interface PathHelper {
   isAbsolutePath: (path: string) => boolean;
   ensureAbsolutePath: (path: string) => string;
+}
+
+interface StringHelper {
+  trim: (str: string) => string;
+  trimJSON: (str: string) => string;
+}
+
+interface JSONHelper {
+  getProperty(subject: ValidJSON, path: string): unknown;
 }

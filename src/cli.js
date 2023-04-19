@@ -1,4 +1,3 @@
-const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
 const yargs = require('yargs');
 
 /**
@@ -7,11 +6,24 @@ const yargs = require('yargs');
  * @returns {CLI}
  */
 module.exports = (args, handler) => {
+  const unmarshallCommands = ['unmarshall', 'u'];
+  const marshallCommands = ['marshall', 'm'];
+
+  /**
+   * @param {string} command
+   * @returns {Action | undefined}
+   */
+  const getMappedCommandName = (command) => {
+    if (unmarshallCommands.includes(command)) {
+      return 'unmarshall';
+    }
+    if (marshallCommands.includes(command)) {
+      return 'marshall';
+    }
+  };
+
   return {
     run: () => {
-      const unmarshallCommands = ['unmarshall', 'u'];
-      const marshallCommands = ['marshall', 'm'];
-
       // eslint-disable-next-line no-unused-expressions
       yargs
         .command(unmarshallCommands, 'Converts a DynamoDB JSON format to regular JSON', (yargs) => {
@@ -46,9 +58,11 @@ module.exports = (args, handler) => {
       const json = yargs.argv._[1];
       const get = yargs.argv.get;
 
-      if (unmarshallCommands.includes(command)) return handler.handle(unmarshall, json, get);
+      const mappedCommandName = getMappedCommandName(command);
 
-      if (marshallCommands.includes(command)) return handler.handle(marshall, json, get);
+      if (mappedCommandName) {
+        return handler.handle(mappedCommandName, json, get);
+      }
 
       return yargs.showHelp();
     },
