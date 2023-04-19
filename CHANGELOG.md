@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/duartealexf/ddbjson/compare/v1.1.0...v1.1.1) (2023-04-19)
+
+
+### Bug Fixes
+
+* fix array conversion ([f3c0958](https://github.com/duartealexf/ddbjson/commit/f3c0958687d4a1f9e6f22ff87b13ee5ccc344e01))
+
 ## 1.1.0 (2023-03-08)
 
 
