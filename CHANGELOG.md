@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/duartealexf/ddbjson/compare/v1.1.1...v1.2.0) (2023-05-18)
+
+
+### Features
+
+* add own property getter, supports asterisk ([aa0c551](https://github.com/duartealexf/ddbjson/commit/aa0c551ec5e28a14e938a9c8fd24d13663325600))
+* add support to parse DDB scans ([941219d](https://github.com/duartealexf/ddbjson/commit/941219d0229ffda7eabf312b6e3498436fc417de))
+
 ### [1.1.1](https://github.com/duartealexf/ddbjson/compare/v1.1.0...v1.1.1) (2023-04-19)
 
 
