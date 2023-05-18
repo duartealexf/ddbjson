@@ -1,7 +1,7 @@
 {
   "name": "ddbjson",
   "version": "1.1.1",
-  "description": "Convert JSON from / to DynamoDB JSON format on terminal!",
+  "description": "Marshall/unmarshall, convert JSON from/to DynamoDB JSON on terminal",
   "keywords": [
     "parse",
     "convert",
@@ -12,7 +12,9 @@
     "json",
     "ddbjson",
     "json-to-dynamodb",
-    "dynamodb-to-json"
+    "dynamodb-to-json",
+    "marshall",
+    "unmarshall"
   ],
   "bin": "./lib/index.js",
   "license": "MIT",
@@ -39,7 +41,6 @@
   },
   "dependencies": {
     "@aws-sdk/util-dynamodb": "^3.281.0",
-    "lodash.get": "^4.4.2",
     "yargs": "^17.7.1"
   },
   "devDependencies": {

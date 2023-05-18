@@ -1,0 +1,34 @@
+{
+  "Items": [
+    {
+      "type": {
+        "S": "fruit"
+      },
+      "foodItems": {
+        "L": [
+          {
+            "S": "apple"
+          },
+          {
+            "S": "kiwi"
+          }
+        ]
+      }
+    },
+    {
+      "type": {
+        "S": "meat"
+      },
+      "foodItems": {
+        "L": [
+          {
+            "S": "beef"
+          },
+          {
+            "S": "bacon"
+          }
+        ]
+      }
+    }
+  ]
+}

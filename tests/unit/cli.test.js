@@ -31,7 +31,12 @@ const getFixturePath = (filename) => resolve(process.cwd(), 'tests', 'fixtures',
 /**
  * @param {string} filename
  */
-const getFixtureStr = (filename) => JSON.stringify(require(getFixturePath(filename)));
+const getFixture = (filename) => require(getFixturePath(filename));
+
+/**
+ * @param {string} filename
+ */
+const getFixtureStr = (filename) => JSON.stringify(getFixture(filename));
 
 /**
  * @param {...string} args
@@ -179,7 +184,7 @@ describe('ddbjson CLI', () => {
       const { cli, mockStdin } = makeSut('marshall', arg);
 
       cli.run();
-      if (stdin) await pushStdin(mockStdin, stdin);
+      await pushStdin(mockStdin, stdin);
 
       expect(stderr.output).toStrictEqual('');
       expect(stdout.output).toStrictEqual(expected);
@@ -244,8 +249,9 @@ describe('ddbjson CLI', () => {
       },
     ])('should print JSON when given valid $name', async ({ arg, stdin, expected }) => {
       const { cli, mockStdin } = makeSut('unmarshall', arg);
+
       cli.run();
-      if (stdin) await pushStdin(mockStdin, stdin);
+      await pushStdin(mockStdin, stdin);
 
       expect(stderr.output).toStrictEqual('');
       expect(stdout.output).toStrictEqual(expected);
@@ -269,6 +275,17 @@ describe('ddbjson CLI', () => {
 
       expect(stderr.output).toStrictEqual('');
       expect(stdout.output).toStrictEqual(getFixtureStr('unmarshalled-array-arrays'));
+      expect(lastExitCode).toStrictEqual(0);
+    });
+
+    it('should print JSON when given DynamoDB scan format array', () => {
+      const { cli, mockJSONHelper } = makeSut('unmarshall', '{}', '--get', 'Items.*');
+      mockJSONHelper.getProperty.mockReturnValue(getFixture('marshalled-array-ddb-scan').Items);
+
+      cli.run();
+
+      expect(stderr.output).toStrictEqual('');
+      expect(stdout.output).toStrictEqual(getFixtureStr('unmarshalled-array-ddb-scan'));
       expect(lastExitCode).toStrictEqual(0);
     });
 
